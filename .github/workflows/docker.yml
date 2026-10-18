@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Free disk space (the CUDA + torch layers need it)
+      - name: "Free disk space for the CUDA and torch layers"
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune -af
@@ -47,7 +47,7 @@ jobs:
             org.opencontainers.image.source=https://github.com/zenedgex/proprio-releases
             org.opencontainers.image.version=${{ steps.v.outputs.version }}
             org.opencontainers.image.vendor=ZenEdgeX
-      - name: Smoke test (CPU: the CLI and the licence check from inside the image)
+      - name: "Smoke test: CLI and licence check inside the image (CPU)"
         run: |
           docker run --rm --entrypoint proprio ghcr.io/zenedgex/proprio:${{ steps.v.outputs.version }} licence || test $? -eq 2
           docker run --rm --entrypoint python ghcr.io/zenedgex/proprio:${{ steps.v.outputs.version }} -c "import proprio, torch, lerobot; print('proprio', proprio.__version__ if hasattr(proprio,'__version__') else 'ok', 'torch', torch.__version__)"
