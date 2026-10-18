@@ -25,7 +25,7 @@ Deploying for a fleet (Docker image, licence keys, systemd, metrics): [DEPLOY.md
 ## Try it on your checkpoint (five minutes)
 
 Requirements: Linux x86_64, an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
-`lerobot>=0.6` install (the same environment you run your policy in). Pick the wheel for your
+`lerobot>=0.6` install (the same environment you run your policy in; SmolVLA also needs `pip install num2words`). Pick the wheel for your
 Python from the [latest release](https://github.com/zenedgex/proprio-releases/releases/latest) (checksums in SHA256SUMS) and:
 
 ```sh

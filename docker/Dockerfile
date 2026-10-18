@@ -22,7 +22,7 @@ ARG TORCH=2.11.0
 ARG TORCH_INDEX=https://download.pytorch.org/whl/cu128
 ARG LEROBOT=0.6.1
 RUN pip install --index-url ${TORCH_INDEX} torch==${TORCH} torchvision \
-    && pip install "lerobot==${LEROBOT}" websockets msgpack msgpack-numpy cryptography
+    && pip install "lerobot==${LEROBOT}" num2words websockets msgpack msgpack-numpy cryptography
 
 # The compiled wheel of the release, verified against the published checksums.
 ARG VERSION=0.1.1

@@ -38,7 +38,7 @@ wheel and the [Dockerfile](docker/Dockerfile) in this repository, so what is in 
 ```sh
 python3.12 -m venv /opt/proprio && . /opt/proprio/bin/activate
 pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
-pip install "lerobot==0.6.1" websockets msgpack msgpack-numpy
+pip install "lerobot==0.6.1" num2words websockets msgpack msgpack-numpy   # num2words: SmolVLA's processor needs it
 pip install proprio-0.1.1-cp312-cp312-manylinux*_x86_64.whl      # from Releases; check SHA256SUMS
 proprio licence --install acme.license
 proprio serve lerobot/smolvla_base --robots 16 --budget-ms 100
