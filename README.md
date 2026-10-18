@@ -29,7 +29,7 @@ Requirements: Linux x86_64, an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a work
 Python from the [latest release](https://github.com/zenedgex/proprio-releases/releases/latest) (checksums in SHA256SUMS) and:
 
 ```sh
-pip install proprio-0.1.1-cp312-cp312-manylinux_2_28_x86_64.whl   # cp310 / cp311 for other Pythons
+pip install proprio-0.1.1-cp312-cp312-manylinux*_x86_64.whl   # cp310 / cp311 for other Pythons
 proprio certify lerobot/smolvla_base --ticks 32 --out cert.json
 ```
 
