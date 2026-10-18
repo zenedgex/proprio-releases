@@ -24,7 +24,7 @@ wheels contain compiled modules, not source. See [EVALUATION-LICENSE.md](EVALUAT
 
 Requirements: Linux x86_64, an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
 `lerobot>=0.6` install (the same environment you run your policy in). Pick the wheel for your
-Python from the latest [release](../../releases) and:
+Python from the [v0.1.0 release](https://github.com/zenedgex/proprio-releases/releases/tag/v0.1.0) (checksums in SHA256SUMS) and:
 
 ```sh
 pip install proprio-0.1.0-cp312-cp312-linux_x86_64.whl        # cp310 / cp311 for other Pythons
