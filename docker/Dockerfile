@@ -28,7 +28,7 @@ RUN pip install --index-url ${TORCH_INDEX} torch==${TORCH} torchvision \
 ARG VERSION=0.1.1
 RUN set -e; cd /tmp \
     && curl -fsSLO https://github.com/zenedgex/proprio-releases/releases/download/v${VERSION}/SHA256SUMS \
-    && WHEEL=$(grep -o "proprio-${VERSION}-cp312-cp312-[a-z0-9_]*\.whl" SHA256SUMS | head -1) \
+    && WHEEL=$(grep -o "proprio-${VERSION}-cp312-cp312-[a-z0-9_.]*\.whl" SHA256SUMS | head -1) \
     && curl -fsSLO https://github.com/zenedgex/proprio-releases/releases/download/v${VERSION}/${WHEEL} \
     && grep "${WHEEL}" SHA256SUMS | sha256sum -c - \
     && pip install ./${WHEEL} && rm -f ${WHEEL} SHA256SUMS && mkdir -p ${PROPRIO_HOME}
