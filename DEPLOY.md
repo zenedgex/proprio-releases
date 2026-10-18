@@ -113,9 +113,9 @@ deployment; it records GPU, driver, clocks, seeds and the digest of every action
 - **Metrics**: scrape `:9100/metrics`. Counters `proprio_robot_ticks_total`,
   `proprio_late_total`, histograms of tick latency and batch size. `/rollup` is a signed
   summary you can archive.
-- **Usage**: licensed servers append robot-tick counts to `$PROPRIO_HOME/usage.jsonl` hourly
-  (or report through AWS Marketplace metering with `PROPRIO_METERING=aws`). Evaluation mode
-  records nothing.
+- **Usage**: with `PROPRIO_METERING=local` a licensed server appends robot-tick counts to
+  `$PROPRIO_HOME/usage.jsonl` hourly and on shutdown; `PROPRIO_METERING=aws` reports through AWS
+  Marketplace metering instead. Unset, nothing is recorded. Evaluation mode never records.
 - **Logs**: stdout. `docker logs` or `journalctl -u proprio`.
 - **Upgrade**: pull the new image tag or install the new wheel, keep `PROPRIO_HOME`, restart.
   Re-run `certify` after any change of wheel, driver or torch: exactness is per stack.
