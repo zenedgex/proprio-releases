@@ -20,14 +20,16 @@ Details: https://zenedgex.in/proprio/
 This repository holds the **evaluation wheels** only. Proprio is proprietary software; the
 wheels contain compiled modules, not source. See [EVALUATION-LICENSE.md](EVALUATION-LICENSE.md).
 
+Deploying for a fleet (Docker image, licence keys, systemd, metrics): [DEPLOY.md](DEPLOY.md).
+
 ## Try it on your checkpoint (five minutes)
 
 Requirements: Linux x86_64, an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
 `lerobot>=0.6` install (the same environment you run your policy in). Pick the wheel for your
-Python from the [v0.1.0 release](https://github.com/zenedgex/proprio-releases/releases/tag/v0.1.0) (checksums in SHA256SUMS) and:
+Python from the [latest release](https://github.com/zenedgex/proprio-releases/releases/latest) (checksums in SHA256SUMS) and:
 
 ```sh
-pip install proprio-0.1.0-cp312-cp312-linux_x86_64.whl        # cp310 / cp311 for other Pythons
+pip install proprio-0.1.1-cp312-cp312-manylinux_2_28_x86_64.whl   # cp310 / cp311 for other Pythons
 proprio certify lerobot/smolvla_base --ticks 32 --out cert.json
 ```
 
@@ -69,7 +71,7 @@ Every row is bit-identical to what that robot would get alone; the certificate c
 proprio certify lerobot/smolvla_base --robots 4 --ticks 64
 ```
 
-Evaluation mode serves up to 4 robots per tick. Licences unlock larger fleets and the
+Evaluation mode serves up to 4 robots per tick. Licence keys (`proprio licence --install KEY`) unlock larger fleets and the
 invariant tier (batched GEMMs on batch-invariant kernels, 14.8x per robot at 16 SmolVLA
 robots, with the difference to stock eager declared on the certificate).
 

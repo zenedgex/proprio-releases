@@ -1,0 +1,26 @@
+# One GPU, one policy, Prometheus scraping the tick metrics.
+#   PROPRIO_LICENSE="$(cat acme.license)" HF_TOKEN=hf_... docker compose -f docker/compose.yaml up -d
+services:
+  proprio:
+    image: ghcr.io/zenedgex/proprio:0.1.1
+    command: ["lerobot/smolvla_base", "--robots", "16", "--budget-ms", "100"]
+    environment:
+      PROPRIO_LICENSE: ${PROPRIO_LICENSE:-}
+      HF_TOKEN: ${HF_TOKEN:-}
+    ports: ["8000:8000", "8080:8080", "9100:9100"]
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+      - proprio-state:/var/lib/proprio
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]
+    stop_grace_period: 30s
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    volumes: ["./prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["9090:9090"]
+volumes:
+  hf-cache: {}
+  proprio-state: {}

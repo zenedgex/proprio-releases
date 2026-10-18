@@ -1,0 +1,27 @@
+# Proprio as a system service on a GPU host (pip install, no Docker).
+#   sudo cp proprio.service /etc/systemd/system/ && sudo systemctl enable --now proprio
+# Edit the policy, robot count and the virtualenv path; put the licence key in
+# /var/lib/proprio/license (proprio licence --install KEY, as the proprio user).
+[Unit]
+Description=Proprio exact inference server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=proprio
+Group=proprio
+Environment=PROPRIO_HOME=/var/lib/proprio
+Environment=HF_HOME=/var/lib/proprio/hf
+Environment=OMP_NUM_THREADS=1
+Environment=TOKENIZERS_PARALLELISM=false
+EnvironmentFile=-/etc/proprio.env
+ExecStart=/opt/proprio/bin/proprio serve lerobot/smolvla_base --robots 16 --budget-ms 100
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+StateDirectory=proprio
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
