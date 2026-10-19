@@ -4,7 +4,7 @@
 #   docker run --gpus all -p 8000:8000 -p 8080:8080 -p 9100:9100 \
 #       -e PROPRIO_LICENSE="$(cat acme.license)" -e HF_TOKEN=hf_... \
 #       -v proprio-cache:/root/.cache/huggingface \
-#       ghcr.io/zenedgex/proprio:0.1.1 lerobot/smolvla_base --robots 16
+#       proprio:0.1.2 lerobot/smolvla_base --robots 16
 #
 # Pinned to the stack the certificates were produced with: CUDA 12.8, torch 2.11.0+cu128,
 # LeRobot 0.6.1, Python 3.12. Change the pins and re-run `proprio certify` before trusting it.
@@ -22,13 +22,13 @@ ARG TORCH=2.11.0
 ARG TORCH_INDEX=https://download.pytorch.org/whl/cu128
 ARG LEROBOT=0.6.1
 RUN pip install --index-url ${TORCH_INDEX} torch==${TORCH} torchvision \
-    && pip install "lerobot==${LEROBOT}" num2words websockets msgpack msgpack-numpy cryptography
+    && pip install "lerobot[async,smolvla,pi]==${LEROBOT}" num2words websockets msgpack msgpack-numpy cryptography
 
 # The compiled wheel of the release, verified against the published checksums.
-ARG VERSION=0.1.1
+ARG VERSION=0.1.2
 RUN set -e; cd /tmp \
     && curl -fsSLO https://github.com/zenedgex/proprio-releases/releases/download/v${VERSION}/SHA256SUMS \
-    && WHEEL=$(grep -o "proprio-${VERSION}-cp312-cp312-[a-z0-9_.]*\.whl" SHA256SUMS | head -1) \
+    && WHEEL=$(grep -o "proprio-${VERSION}-cp312-cp312-[a-z0-9_.]*_$(uname -m)\.whl" SHA256SUMS | head -1) \
     && curl -fsSLO https://github.com/zenedgex/proprio-releases/releases/download/v${VERSION}/${WHEEL} \
     && grep "${WHEEL}" SHA256SUMS | sha256sum -c - \
     && pip install ./${WHEEL} && rm -f ${WHEEL} SHA256SUMS && mkdir -p ${PROPRIO_HOME}

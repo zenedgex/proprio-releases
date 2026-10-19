@@ -11,35 +11,48 @@ and certificates locally. Hugging Face is used only to download checkpoints.
 | | Docker image | pip wheel |
 |---|---|---|
 | Best for | servers, fleets, anything that restarts itself | lab machines, existing LeRobot environments |
-| Command | `docker run --gpus all ghcr.io/zenedgex/proprio:0.1.1 ...` | `pip install proprio-0.1.1-cp312-...whl` |
+| Command | `docker run --gpus all proprio:0.1.2 ...` | `pip install proprio-0.1.2-cp312-...whl` |
 | Brings its own | CUDA 12.8 runtime, torch 2.11, LeRobot 0.6.1, Python 3.12 | nothing: uses your torch and LeRobot |
 
-Requirements either way: Linux x86_64, an NVIDIA GPU with a driver for CUDA 12.8 or newer
+Requirements either way: Linux (x86_64 or aarch64), an NVIDIA GPU with a driver for CUDA 12.8 or newer
 (R570+), 24 GB of GPU memory for pi0.5 or GR00T N1.7 (SmolVLA fits in 8 GB). For Docker,
 the NVIDIA Container Toolkit.
 
 ### Docker
+
+Build the image once from this repository (it downloads the release wheel and checks it
+against the published checksums; a prebuilt image on GitHub Container Registry is coming):
+
+```sh
+git clone https://github.com/zenedgex/proprio-releases && cd proprio-releases
+docker build -t proprio:0.1.2 docker/
+```
+
+Then run it:
 
 ```sh
 docker run --gpus all -d --name proprio --restart unless-stopped \
   -p 8000:8000 -p 8080:8080 -p 9100:9100 \
   -e PROPRIO_LICENSE="$(cat acme.license)" -e HF_TOKEN=hf_... \
   -v proprio-cache:/root/.cache/huggingface -v proprio-state:/var/lib/proprio \
-  ghcr.io/zenedgex/proprio:0.1.1 lerobot/smolvla_base --robots 16 --budget-ms 100
+  proprio:0.1.2 lerobot/smolvla_base --robots 16 --budget-ms 100
 docker logs -f proprio
 ```
 
 Or with Prometheus: `docker compose -f docker/compose.yaml up -d` (see [docker/compose.yaml](docker/compose.yaml)).
-The image is built by [the docker workflow](.github/workflows/docker.yml) from the release
-wheel and the [Dockerfile](docker/Dockerfile) in this repository, so what is in it is public.
+Everything in the image comes from the release wheel and the [Dockerfile](docker/Dockerfile)
+in this repository, so what is in it is public. For LeRobot's async inference, start the
+container with `lerobot-server` and LeRobot's server flags instead of a policy (see
+[LEROBOT.md](LEROBOT.md)).
 
 ### pip
 
 ```sh
 python3.12 -m venv /opt/proprio && . /opt/proprio/bin/activate
 pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
-pip install "lerobot==0.6.1" num2words websockets msgpack msgpack-numpy   # num2words: SmolVLA's processor needs it
-pip install proprio-0.1.1-cp312-cp312-manylinux*_x86_64.whl      # from Releases; check SHA256SUMS
+pip install "lerobot[async,smolvla,pi]==0.6.1" num2words websockets msgpack msgpack-numpy
+# the policy extras pin a transformers LeRobot supports; num2words: SmolVLA's processor needs it
+pip install proprio-0.1.2-cp312-cp312-manylinux*_x86_64.whl      # from Releases; check SHA256SUMS
 proprio licence --install acme.license
 proprio serve lerobot/smolvla_base --robots 16 --budget-ms 100
 ```

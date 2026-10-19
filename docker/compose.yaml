@@ -2,7 +2,8 @@
 #   PROPRIO_LICENSE="$(cat acme.license)" HF_TOKEN=hf_... docker compose -f docker/compose.yaml up -d
 services:
   proprio:
-    image: ghcr.io/zenedgex/proprio:0.1.1
+    image: proprio:0.1.2
+    build: .   # docker/Dockerfile: the release wheel, checksum-verified
     command: ["lerobot/smolvla_base", "--robots", "16", "--budget-ms", "100"]
     environment:
       PROPRIO_LICENSE: ${PROPRIO_LICENSE:-}

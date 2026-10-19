@@ -22,14 +22,18 @@ wheels contain compiled modules, not source. See [EVALUATION-LICENSE.md](EVALUAT
 
 Deploying for a fleet (Docker image, licence keys, systemd, metrics): [DEPLOY.md](DEPLOY.md).
 
+Already using LeRobot's async inference? Replace one command on the GPU machine, nothing on the
+robot: [LEROBOT.md](LEROBOT.md).
+
 ## Try it on your checkpoint (five minutes)
 
-Requirements: Linux x86_64, an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
-`lerobot>=0.6` install (the same environment you run your policy in; SmolVLA also needs `pip install num2words`). Pick the wheel for your
+Requirements: Linux (x86_64 or aarch64), an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
+LeRobot 0.6 install with its policy extras (the same environment you run your policy in:
+`pip install "lerobot[smolvla,pi]==0.6.1" num2words`; the extras pin a transformers release LeRobot supports). Pick the wheel for your
 Python from the [latest release](https://github.com/zenedgex/proprio-releases/releases/latest) (checksums in SHA256SUMS) and:
 
 ```sh
-pip install proprio-0.1.1-cp312-cp312-manylinux*_x86_64.whl   # cp310 / cp311 for other Pythons
+pip install proprio-0.1.2-cp312-cp312-manylinux*_x86_64.whl   # cp310 / cp311 for other Pythons
 proprio certify lerobot/smolvla_base --ticks 32 --out cert.json
 ```
 
@@ -43,6 +47,15 @@ lerobot/smolvla_base [exact] EXACT: 32/32 ticks bit-identical; eager 241.3 ms ->
 `cert.json` holds the full record: per-tick latencies, max and mean absolute error, GPU,
 driver, clocks, power state, seeds, and a digest. Try your own checkpoint with its hub id or
 local path (`proprio certify ./my_policy`). Gated checkpoints need your `HF_TOKEN`.
+
+### Check the machine first
+
+```sh
+proprio doctor --policy lerobot/smolvla_base
+```
+
+Checks Python, torch, GPU and driver, graph recording, packages, licence, and what the checkpoint
+needs (gated tokenizers for pi0 and pi0.5), with a one-line fix for anything missing.
 
 ### Serve it
 
@@ -86,8 +99,8 @@ Issues: this repository. Direct: hello@zenedgex.in
 
 ## Status
 
-Technical preview. Verified on RTX 4090 with LeRobot 0.6 (SmolVLA, pi0.5, GR00T N1.7). Other
-NVIDIA GPUs should work (the method does not depend on the card; the speedups do); Jetson and
-AMD are next. Not yet: policies outside LeRobot (openpi direct, OpenVLA) are in progress.
+Technical preview. Verified on RTX 4090 with LeRobot 0.6 (SmolVLA, pi0.5, GR00T N1.7). Also run on H100. Other
+NVIDIA GPUs should work (the method does not depend on the card; the speedups do). Arm wheels
+(aarch64) are built and install-tested; on-device Jetson numbers are next. Not yet: policies outside LeRobot (openpi direct, OpenVLA) are in progress.
 
 ZenEdgeX, 2026.
