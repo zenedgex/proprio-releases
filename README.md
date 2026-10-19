@@ -103,4 +103,4 @@ Technical preview. Verified on RTX 4090 with LeRobot 0.6 (SmolVLA, pi0.5, GR00T 
 NVIDIA GPUs should work (the method does not depend on the card; the speedups do). Arm wheels
 (aarch64) are built and install-tested; on-device Jetson numbers are next. Not yet: policies outside LeRobot (openpi direct, OpenVLA) are in progress.
 
-ZenEdgeX, 2026.
+Patent pending. ZenEdgeX, 2026.
