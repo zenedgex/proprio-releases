@@ -2,7 +2,7 @@
 #   PROPRIO_LICENSE="$(cat acme.license)" HF_TOKEN=hf_... docker compose -f docker/compose.yaml up -d
 services:
   proprio:
-    image: proprio:0.1.2
+    image: proprio:0.1.3
     build: .   # docker/Dockerfile: the release wheel, checksum-verified
     command: ["lerobot/smolvla_base", "--robots", "16", "--budget-ms", "100"]
     environment:

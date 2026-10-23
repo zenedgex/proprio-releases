@@ -11,7 +11,7 @@ and certificates locally. Hugging Face is used only to download checkpoints.
 | | Docker image | pip wheel |
 |---|---|---|
 | Best for | servers, fleets, anything that restarts itself | lab machines, existing LeRobot environments |
-| Command | `docker run --gpus all proprio:0.1.2 ...` | `pip install proprio` |
+| Command | `docker run --gpus all proprio:0.1.3 ...` | `pip install proprio` |
 | Brings its own | CUDA 12.8 runtime, torch 2.11, LeRobot 0.6.1, Python 3.12 | nothing: uses your torch and LeRobot |
 
 Requirements either way: Linux (x86_64 or aarch64), an NVIDIA GPU with a driver for CUDA 12.8 or newer
@@ -25,7 +25,7 @@ against the published checksums; a prebuilt image on GitHub Container Registry i
 
 ```sh
 git clone https://github.com/zenedgex/proprio-releases && cd proprio-releases
-docker build -t proprio:0.1.2 docker/
+docker build -t proprio:0.1.3 docker/
 ```
 
 Then run it:
@@ -35,7 +35,7 @@ docker run --gpus all -d --name proprio --restart unless-stopped \
   -p 8000:8000 -p 8080:8080 -p 9100:9100 \
   -e PROPRIO_LICENSE="$(cat acme.license)" -e HF_TOKEN=hf_... \
   -v proprio-cache:/root/.cache/huggingface -v proprio-state:/var/lib/proprio \
-  proprio:0.1.2 lerobot/smolvla_base --robots 16 --budget-ms 100
+  proprio:0.1.3 lerobot/smolvla_base --robots 16 --budget-ms 100
 docker logs -f proprio
 ```
 
@@ -52,7 +52,7 @@ python3.12 -m venv /opt/proprio && . /opt/proprio/bin/activate
 pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 pip install "lerobot[async,smolvla,pi]==0.6.1" num2words websockets msgpack msgpack-numpy
 # the policy extras pin a transformers LeRobot supports; num2words: SmolVLA's processor needs it
-pip install proprio==0.1.2                                       # PyPI; or the Releases wheels with SHA256SUMS
+pip install proprio==0.1.3                                       # PyPI; or the Releases wheels with SHA256SUMS
 proprio licence --install acme.license
 proprio serve lerobot/smolvla_base --robots 16 --budget-ms 100
 ```
