@@ -11,7 +11,7 @@ and certificates locally. Hugging Face is used only to download checkpoints.
 | | Docker image | pip wheel |
 |---|---|---|
 | Best for | servers, fleets, anything that restarts itself | lab machines, existing LeRobot environments |
-| Command | `docker run --gpus all proprio:0.1.2 ...` | `pip install proprio-0.1.2-cp312-...whl` |
+| Command | `docker run --gpus all proprio:0.1.2 ...` | `pip install proprio` |
 | Brings its own | CUDA 12.8 runtime, torch 2.11, LeRobot 0.6.1, Python 3.12 | nothing: uses your torch and LeRobot |
 
 Requirements either way: Linux (x86_64 or aarch64), an NVIDIA GPU with a driver for CUDA 12.8 or newer
@@ -52,7 +52,7 @@ python3.12 -m venv /opt/proprio && . /opt/proprio/bin/activate
 pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 pip install "lerobot[async,smolvla,pi]==0.6.1" num2words websockets msgpack msgpack-numpy
 # the policy extras pin a transformers LeRobot supports; num2words: SmolVLA's processor needs it
-pip install proprio-0.1.2-cp312-cp312-manylinux*_x86_64.whl      # from Releases; check SHA256SUMS
+pip install proprio==0.1.2                                       # PyPI; or the Releases wheels with SHA256SUMS
 proprio licence --install acme.license
 proprio serve lerobot/smolvla_base --robots 16 --budget-ms 100
 ```
@@ -106,7 +106,7 @@ policy = RemotePolicy("ws://gpu-box:8000", n_action_steps=50)
 action = policy.select_action(batch)     # same call as before
 ```
 
-The client is also in the wheel for CPU-only robot computers (`pip install` the wheel there too;
+The client is also in the wheel for CPU-only robot computers (`pip install proprio` there too;
 no GPU needed to use `proprio.client`). Any openpi `websocket_client_policy` works as well.
 HTTP example: [HUB.md](HUB.md).
 

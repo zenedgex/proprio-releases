@@ -27,18 +27,17 @@ and the wheels contain compiled modules, not source. Terms: [EVALUATION-LICENSE.
 
 Deploying for a fleet (Docker image, licence keys, systemd, metrics): [DEPLOY.md](DEPLOY.md).
 
-Already using LeRobot's async inference? Replace one command on the GPU machine, nothing on the
-robot: [LEROBOT.md](LEROBOT.md).
+Already using LeRobot 0.6's gRPC async inference? Replace one command on the GPU machine, nothing
+on the robot: [LEROBOT.md](LEROBOT.md).
 
 ## Try it on your checkpoint (five minutes)
 
 Requirements: Linux (x86_64 or aarch64), an NVIDIA GPU, Python 3.10, 3.11 or 3.12, and a working
 LeRobot 0.6 install with its policy extras (the same environment you run your policy in:
-`pip install "lerobot[smolvla,pi]==0.6.1" num2words`; the extras pin a transformers release LeRobot supports). Pick the wheel for your
-Python from the [latest release](https://github.com/zenedgex/proprio-releases/releases/latest) (checksums in SHA256SUMS) and:
+`pip install "lerobot[smolvla,pi]==0.6.1" num2words`; the extras pin a transformers release LeRobot supports). Then:
 
 ```sh
-pip install proprio-0.1.2-cp312-cp312-manylinux*_x86_64.whl   # cp310 / cp311 for other Pythons
+pip install proprio            # from PyPI; wheels also on the Releases page with SHA256SUMS
 proprio certify lerobot/smolvla_base --ticks 32 --out cert.json
 ```
 

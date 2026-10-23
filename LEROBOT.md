@@ -2,6 +2,11 @@
 
 **Written for LeRobot users who run a policy server on a GPU machine and a robot client on the robot.**
 
+> **Most LeRobot users want the plugin instead:** `pip install lerobot_policy_proprio` makes
+> `lerobot-rollout`, `lerobot-record`, `lerobot-eval` and LeRobot's newer `lerobot-policy-server` use
+> Proprio with no other change: https://github.com/zenedgex/lerobot-policy-proprio. This page covers
+> LeRobot 0.6's gRPC async-inference server (`lerobot.async_inference.policy_server`).
+
 LeRobot's async inference splits a policy between a GPU machine (the policy server) and the robot
 (the robot client), connected over gRPC. Proprio ships a policy server that speaks the same protocol
 and takes the same flags. You replace one command on the GPU machine. Nothing changes on the robot.
@@ -9,8 +14,8 @@ and takes the same flags. You replace one command on the GPU machine. Nothing ch
 What you get:
 
 - **Faster ticks, same actions.** When the robot client sends its policy choice, Proprio loads that
-  checkpoint and records its control tick. Before serving, it checks the recording bit for bit against
-  the checkpoint's own eager execution. Every later tick is a replay. Measured on an RTX 4090 through
+  checkpoint and prepares it. Before serving, it checks bit for bit that its actions equal the
+  checkpoint's own execution. Measured on an RTX 4090 through
   this protocol (LeRobot's robot-side messages, three 480x640 cameras), against LeRobot's own server
   on the same observations and seeds: SmolVLA and pi0.5 returned identical action chunks, 20 of 20
   each. SmolVLA: 302 ms per chunk on LeRobot's server, 53 ms on Proprio's (5.7x). pi0.5: 215 ms
@@ -31,7 +36,7 @@ LeRobot in works.
 ```sh
 pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
 pip install "lerobot[async,smolvla,pi]==0.6.1" num2words   # the policy extras pin a transformers LeRobot supports
-pip install proprio-0.1.2-cp312-cp312-manylinux*_x86_64.whl     # from Releases; *_aarch64 for Arm machines
+pip install proprio                                       # Linux x86_64 and aarch64 wheels on PyPI
 ```
 
 ## 2. Check the machine
@@ -41,8 +46,8 @@ proprio doctor --policy lerobot/smolvla_base
 ```
 
 Every line says OK, WARN or FAIL, with a fix for anything missing (a package, a transformers release
-LeRobot does not support, a gated tokenizer, the GPU driver). It also records and replays a small test tick to confirm graph recording works on
-this GPU.
+LeRobot does not support, a gated tokenizer, the GPU driver). It also runs a small self-test to
+confirm Proprio works on this GPU.
 
 ## 3. Swap the server
 
@@ -76,8 +81,9 @@ python -m lerobot.async_inference.robot_client \
     --aggregate_fn_name=weighted_average
 ```
 
-The first connection for a checkpoint takes as long as loading plus recording: under a minute for
-SmolVLA, about four minutes for pi0.5 (LeRobot's own server takes about as long to load it). The server log then prints the recorded target and its share of the tick, and serves.
+The first connection for a checkpoint takes as long as loading plus preparing it: under a minute
+for SmolVLA, about four minutes for pi0.5 (LeRobot's own server takes about as long to load it). The
+server log then says it is ready, and serves.
 
 ## 5. Prove it on your checkpoint
 
