@@ -1,4 +1,4 @@
-# Proprio: exact inference for robot policies (evaluation release)
+# Proprio: exact inference for robot policies
 
 Proprio runs an unmodified vision-language-action policy as a recorded device graph and
 proves, tick by tick, that the actions are **bit-identical** to the policy's own eager
@@ -17,8 +17,13 @@ For comparison, `torch.compile` on SmolVLA gives 4.9x to 9.2x and changes the ac
 0.07 to 0.08; TF32 and cuDNN autotuning change them by 0.01 to 0.1 for no speedup.
 Details: https://zenedgex.in/proprio/
 
-This repository holds the **evaluation wheels** only. Proprio is proprietary software; the
-wheels contain compiled modules, not source. See [EVALUATION-LICENSE.md](EVALUATION-LICENSE.md).
+**Using LeRobot?** Install the plugin and LeRobot's own `lerobot-rollout`, `lerobot-record` and
+`lerobot-eval` run your policy through Proprio, with no other change:
+[lerobot-policy-proprio](https://github.com/zenedgex/lerobot-policy-proprio).
+
+**Free for one robot**, including production and commercial use, no key needed. Fleets (many robots
+per GPU) use a licence key. This repository holds the wheels only: Proprio is proprietary software
+and the wheels contain compiled modules, not source. Terms: [EVALUATION-LICENSE.md](EVALUATION-LICENSE.md).
 
 Deploying for a fleet (Docker image, licence keys, systemd, metrics): [DEPLOY.md](DEPLOY.md).
 
